@@ -36,10 +36,27 @@ namespace MDBX.Interop
             _closeDelegate(cursor);
         }
 
+
+
+        [SuppressUnmanagedCodeSecurity]
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int GetDelegate(IntPtr cursor, ref DbValue key, ref DbValue value, CursorOp op);
+
+        private static GetDelegate _getDelegate = null;
+
+        internal static void Get(IntPtr cursor, ref DbValue key, ref DbValue value, CursorOp op)
+        {
+            int err = _getDelegate(cursor,ref key,ref value, op);
+            if (err != 0)
+                throw new MdbxException("mdbx_cursor_get", err);
+        }
+
+
         internal static void Bind()
         {
             _closeDelegate = Library.GetProcAddress<CloseDelegate>("mdbx_cursor_close") as CloseDelegate;
             _openDelegate = Library.GetProcAddress<OpenDelegate>("mdbx_cursor_open") as OpenDelegate;
+            _getDelegate = Library.GetProcAddress<GetDelegate>("mdbx_cursor_get") as GetDelegate;
         }
     }
 }
