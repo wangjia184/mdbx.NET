@@ -27,20 +27,19 @@ namespace MDBX.Interop
 
         [SuppressUnmanagedCodeSecurity]
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int CloseDelegate(IntPtr cursor);
+        private delegate void CloseDelegate(IntPtr cursor);
 
         private static CloseDelegate _closeDelegate = null;
 
         internal static void Close(IntPtr cursor)
         {
-            int err = _closeDelegate(cursor);
-            if (err != 0)
-                throw new MdbxException("mdbx_cursor_close", err);
+            _closeDelegate(cursor);
         }
 
         internal static void Bind()
         {
             _closeDelegate = Library.GetProcAddress<CloseDelegate>("mdbx_cursor_close") as CloseDelegate;
+            _openDelegate = Library.GetProcAddress<OpenDelegate>("mdbx_cursor_open") as OpenDelegate;
         }
     }
 }

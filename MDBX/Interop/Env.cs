@@ -84,6 +84,22 @@ namespace MDBX.Interop
 
 
 
+        [SuppressUnmanagedCodeSecurity]
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int SetMaxDbsDelegate(IntPtr env
+            , [MarshalAs(UnmanagedType.U4)] uint dbs
+            );
+        private static SetMaxDbsDelegate _setMaxDbsDelegate = null;
+
+        public static void SetMaxDBs(IntPtr env, uint dbs)
+        {
+            int err = _setMaxDbsDelegate(env, dbs);
+            if (err != 0)
+                throw new MdbxException("mdbx_env_set_maxdbs", err);
+        }
+
+
+
         /// <summary>
         /// int mdbx_env_open_ex(MDBX_env *env, const char *path, unsigned flags, mode_t mode, int* exclusive);
         /// </summary>
@@ -176,6 +192,7 @@ namespace MDBX.Interop
             _statDelegate = Library.GetProcAddress<StatDelegate>("mdbx_env_stat") as StatDelegate;
             _infoDelegate = Library.GetProcAddress<InfoDelegate>("mdbx_env_info") as InfoDelegate;
             _syncDelegate = Library.GetProcAddress<SyncDelegate>("mdbx_env_sync") as SyncDelegate;
+            _setMaxDbsDelegate = Library.GetProcAddress<SetMaxDbsDelegate>("mdbx_env_set_maxdbs") as SetMaxDbsDelegate;
         }
 
     }

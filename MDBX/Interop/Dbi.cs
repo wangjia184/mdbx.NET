@@ -95,6 +95,19 @@ namespace MDBX.Interop
 
 
 
+        [SuppressUnmanagedCodeSecurity]
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int DropDelegate(IntPtr txn, uint dbi, int del);
+
+        private static DropDelegate _dropDelegate = null;
+
+        internal static void Drop(IntPtr txn, uint dbi, bool del)
+        {
+            int err = _dropDelegate(txn, dbi, del ? 1 : 0);
+            if (err != 0)
+                throw new MdbxException("mdbx_drop", err);
+        }
+
         internal static void Bind()
         {
             _openDelegate = Library.GetProcAddress<OpenDelegate>("mdbx_dbi_open") as OpenDelegate;
@@ -102,6 +115,7 @@ namespace MDBX.Interop
             _putDelegate = Library.GetProcAddress<PutDelegate>("mdbx_put") as PutDelegate;
             _getDelegate = Library.GetProcAddress<GetDelegate>("mdbx_get") as GetDelegate;
             _delDelegate = Library.GetProcAddress<DelDelegate>("mdbx_del") as DelDelegate;
+            _dropDelegate = Library.GetProcAddress<DropDelegate>("mdbx_drop") as DropDelegate;
         }
     }
 }

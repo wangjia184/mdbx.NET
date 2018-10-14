@@ -12,7 +12,7 @@ namespace MDBX
 
         public void Dispose()
         {
-            //Dispose(true);
+            Close();
         }
 
         private readonly MdbxEnvironment _env;
@@ -22,6 +22,7 @@ namespace MDBX
 
         internal MdbxCursor(MdbxEnvironment env, MdbxTransaction tran, MdbxDatabase db, IntPtr cursorPtr)
         {
+            string a = Environment.StackTrace;
             _env = env;
             _tran = tran;
             _db = db;

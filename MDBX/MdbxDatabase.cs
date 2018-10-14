@@ -44,6 +44,22 @@ namespace MDBX
         }
 
 
+        /// <summary>
+        /// Drop this database
+        /// </summary>
+        public void Drop()
+        {
+            Dbi.Drop(_tran._txnPtr, _dbi, true);
+        }
+
+        /// <summary>
+        /// delete all keys in this database to empty it
+        /// </summary>
+        public void Empty()
+        {
+            Dbi.Drop(_tran._txnPtr, _dbi, false);
+        }
+
         public void Put(byte[] key, byte[] value, PutOption option = PutOption.Unspecific)
         {
             IntPtr keyPtr = Marshal.AllocHGlobal(key.Length);

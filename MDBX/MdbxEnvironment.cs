@@ -184,5 +184,28 @@ namespace MDBX
                 throw new InvalidOperationException("MDBX environment is not open.");
             }
         }
+
+        /// <summary>
+        /// Set the maximum number of named databases for the environment.
+        /// This function is only needed if multiple databases will be used in the
+        /// environment. Simpler applications that use the environment as a single
+        /// unnamed database can ignore this option.
+        /// 
+        /// This function may only be called after mdbx_env_create() and before
+        /// mdbx_env_open().
+        /// </summary>
+        /// <param name="num"></param>
+        public MdbxEnvironment SetMaxDatabases(uint num)
+        {
+            if (!closed && _envPtr != IntPtr.Zero)
+            {
+                Env.SetMaxDBs(_envPtr, num);
+            }
+            else
+            {
+                throw new InvalidOperationException("MDBX environment is not open.");
+            }
+            return this;
+        }
     }
 }
