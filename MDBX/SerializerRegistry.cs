@@ -9,6 +9,8 @@ namespace MDBX
         private static readonly Dictionary<Type, object> _dic = new Dictionary<Type, object>()
         {
             {  typeof(string), new StringSerializer() },
+            {  typeof(int), new IntSerializer() },
+            {  typeof(long), new LongSerializer() },
         };
 
         /// <summary>

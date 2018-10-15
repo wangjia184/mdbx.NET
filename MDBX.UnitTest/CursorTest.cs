@@ -20,13 +20,13 @@ namespace MDBX.UnitTest
 
             using (MdbxEnvironment env = new MdbxEnvironment())
             {
-                env.SetMaxDatabases(2)
+                env.SetMaxDatabases(20)
                     .Open(path, EnvironmentFlag.NoTLS, 0644);
 
 
                 using (MdbxTransaction tran = env.BeginTransaction())
                 {
-                    MdbxDatabase db = tran.OpenDatabase("cursor_test", DatabaseOption.Create);
+                    MdbxDatabase db = tran.OpenDatabase("cursor_test1", DatabaseOption.Create);
                     db.Empty(); // clean this data table for test
 
                     string[] keys = new string[]
@@ -45,7 +45,7 @@ namespace MDBX.UnitTest
 
                 using (MdbxTransaction tran = env.BeginTransaction(TransactionOption.ReadOnly))
                 {
-                    MdbxDatabase db = tran.OpenDatabase("cursor_test");
+                    MdbxDatabase db = tran.OpenDatabase("cursor_test1");
                     using (MdbxCursor cursor = db.OpenCursor())
                     {
                         string key = null, value = null;
@@ -69,7 +69,55 @@ namespace MDBX.UnitTest
         }
 
 
+        [Fact(DisplayName = "update by cursor")]
+        public void Test2()
+        {
+            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "mdbx");
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
 
+            using (MdbxEnvironment env = new MdbxEnvironment())
+            {
+                env.SetMaxDatabases(20)
+                    .Open(path, EnvironmentFlag.NoTLS, 0644);
+
+
+                using (MdbxTransaction tran = env.BeginTransaction())
+                {
+                    MdbxDatabase db = tran.OpenDatabase("cursor_test2", DatabaseOption.Create);
+                    db.Empty(); // clean this data table for test
+
+                    // add some keys
+                    for (int i = 0; i < 5; i++)
+                        db.Put(i+1, (i+1).ToString());
+
+                    tran.Commit();
+                }
+
+                using (MdbxTransaction tran = env.BeginTransaction(TransactionOption.ReadOnly))
+                {
+                    MdbxDatabase db = tran.OpenDatabase("cursor_test2");
+                    using (MdbxCursor cursor = db.OpenCursor())
+                    {
+                        string key = null, value = null;
+                        cursor.Get(ref key, ref value, CursorOp.First);
+
+                        char c = 'A';
+                        Assert.Equal(c.ToString(), key);
+                        Assert.Equal(c.ToString(), value);
+
+                        while (cursor.Get(ref key, ref value, CursorOp.Next))
+                        {
+                            c = (char)((int)c + 1);
+                            Assert.Equal(c.ToString(), key);
+                            Assert.Equal(c.ToString(), value);
+                        }
+                    }
+                }
+
+                env.Close();
+            }
+        }
 
     }
 }
