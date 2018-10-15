@@ -84,7 +84,9 @@ namespace MDBX.UnitTest
 
                 using (MdbxTransaction tran = env.BeginTransaction())
                 {
-                    MdbxDatabase db = tran.OpenDatabase("cursor_test2", DatabaseOption.Create);
+                    MdbxDatabase db = tran.OpenDatabase("cursor_test2", DatabaseOption.Create 
+                        | DatabaseOption.IntegerKey /*opitimized for fixed size int or long key*/
+                        );
                     db.Empty(); // clean this data table for test
 
                     // add some keys
