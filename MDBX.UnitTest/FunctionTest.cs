@@ -107,5 +107,31 @@ namespace MDBX.UnitTest
                 env.Close();
             }
         }
+
+        [Fact(DisplayName = "mdbx_txn_id")]
+        public void Test6()
+        {
+            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "mdbx");
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
+
+            using (MdbxEnvironment env = new MdbxEnvironment())
+            {
+                env.Open(path, EnvironmentFlag.NoTLS, 0644);
+
+                using (MdbxTransaction tran = env.BeginTransaction(TransactionOption.ReadOnly))
+                {
+                    ulong snapshotID = tran.GetID();
+                }
+
+                using (MdbxTransaction tran = env.BeginTransaction())
+                {
+                    ulong txnID = tran.GetID();
+                }
+
+                env.Close();
+            }
+        }
     }
 }

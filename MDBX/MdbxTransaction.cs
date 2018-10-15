@@ -113,5 +113,15 @@ namespace MDBX
             return new MdbxDatabase(_env, this, Dbi.Open(_txnPtr, name, option));
         }
 
+        /// <summary>
+        /// This returns the identifier associated with this transaction. For a
+        /// read-only transaction, this corresponds to the snapshot being read;
+        /// concurrent readers will frequently have the same transaction ID.
+        /// </summary>
+        /// <returns></returns>
+        public ulong GetID()
+        {
+            return Txn.GetID(_txnPtr);
+        }
     }
 }

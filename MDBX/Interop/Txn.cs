@@ -86,6 +86,19 @@ namespace MDBX.Interop
         }
 
 
+
+        [SuppressUnmanagedCodeSecurity]
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate ulong GetTxnIdDelegate(IntPtr txn);
+
+        private static GetTxnIdDelegate _getTxnIdDelegate = null;
+
+        internal static ulong GetID(IntPtr txn)
+        {
+            return _getTxnIdDelegate(txn);
+        }
+
+
         internal static void Bind()
         {
             _beginDelegate = Library.GetProcAddress<BeginDelegate>("mdbx_txn_begin") as BeginDelegate;
@@ -93,6 +106,7 @@ namespace MDBX.Interop
             _abortDelegate = Library.GetProcAddress<AbortDelegate>("mdbx_txn_abort") as AbortDelegate;
             _resetDelegate = Library.GetProcAddress<ResetDelegate>("mdbx_txn_reset") as ResetDelegate;
             _renewDelegate = Library.GetProcAddress<RenewDelegate>("mdbx_txn_renew") as RenewDelegate;
+            _getTxnIdDelegate = Library.GetProcAddress<GetTxnIdDelegate>("mdbx_txn_id") as GetTxnIdDelegate;
         }
     }
 }
