@@ -46,5 +46,66 @@ namespace MDBX.UnitTest
                 env.Close();
             }
         }
+
+
+
+        [Fact(DisplayName = "mdbx_env_set_flags / mdbx_env_get_flags")]
+        public void Test3()
+        {
+            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "mdbx");
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
+
+            using (MdbxEnvironment env = new MdbxEnvironment())
+            {
+                env.Open(path, EnvironmentFlag.NoTLS, 0644);
+
+                EnvironmentFlag flags = env.GetFlags();
+
+                env.SetFlags(EnvironmentFlag.NoSync);
+
+                env.Close();
+            }
+        }
+
+
+        [Fact(DisplayName = "mdbx_env_set_maxreaders / mdbx_env_set_mapsize")]
+        public void Test4()
+        {
+            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "mdbx");
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
+
+            using (MdbxEnvironment env = new MdbxEnvironment())
+            {
+                env.SetMapSize(1024*1024*10)
+                    .SetMaxDatabases(2)
+                    .SetMaxReaders(100)
+                    .Open(path, EnvironmentFlag.NoTLS, 0644);
+
+                env.Close();
+            }
+        }
+
+        [Fact(DisplayName = "mdbx_env_get_maxkeysize / mdbx_env_get_maxreaders")]
+        public void Test5()
+        {
+            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "mdbx");
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
+
+            using (MdbxEnvironment env = new MdbxEnvironment())
+            {
+                env.Open(path, EnvironmentFlag.NoTLS, 0644);
+
+                int maxKeySize = env.GetMaxKeySize();
+                int maxReaders = env.GetMaxReaders();
+
+                env.Close();
+            }
+        }
     }
 }

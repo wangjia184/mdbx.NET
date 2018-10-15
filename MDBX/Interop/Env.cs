@@ -182,6 +182,87 @@ namespace MDBX.Interop
         }
 
 
+
+        [SuppressUnmanagedCodeSecurity]
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int SetFlagsDelegate(IntPtr env, uint flags, int onoff);
+        private static SetFlagsDelegate _setFlagsDelegate = null;
+
+        public static void SetFlags(IntPtr env, EnvironmentFlag flags, bool onoff)
+        {
+            int err = _setFlagsDelegate(env, (uint)flags, onoff ? 1 : 0);
+            if (err != 0)
+                throw new MdbxException("mdbx_env_set_flags", err);
+        }
+
+
+
+        [SuppressUnmanagedCodeSecurity]
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int GetFlagsDelegate(IntPtr env, out uint flags);
+        private static GetFlagsDelegate _getFlagsDelegate = null;
+
+        public static EnvironmentFlag GetFlags(IntPtr env)
+        {
+            uint flags;
+            int err = _getFlagsDelegate(env, out flags);
+            if (err != 0)
+                throw new MdbxException("mdbx_env_set_flags", err);
+            return (EnvironmentFlag)flags;
+        }
+
+
+        [SuppressUnmanagedCodeSecurity]
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int SetMapSizeDelegate(IntPtr env, UIntPtr size);
+        private static SetMapSizeDelegate _setMapSizeDelegate = null;
+
+        public static void SetMapSize(IntPtr env, uint size)
+        {
+            int err = _setMapSizeDelegate(env, UIntPtr.Add(UIntPtr.Zero, (int)size));
+            if (err != 0)
+                throw new MdbxException("mdbx_env_set_mapsize", err);
+        }
+
+
+        [SuppressUnmanagedCodeSecurity]
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int SetMaxReadersDelegate(IntPtr env, uint readers);
+        private static SetMaxReadersDelegate _setMaxReadersDelegate = null;
+
+        public static void SetMaxReaders(IntPtr env, uint readers)
+        {
+            int err = _setMaxReadersDelegate(env, readers);
+            if (err != 0)
+                throw new MdbxException("mdbx_env_set_maxreaders", err);
+        }
+
+        [SuppressUnmanagedCodeSecurity]
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int GetMaxReadersDelegate(IntPtr env, out uint readers);
+        private static GetMaxReadersDelegate _getMaxReadersDelegate = null;
+
+        public static int GetMaxReaders(IntPtr env)
+        {
+            uint readers;
+            int err = _getMaxReadersDelegate(env, out readers);
+            if (err != 0)
+                throw new MdbxException("mdbx_env_get_maxreaders", err);
+            return (int)readers;
+        }
+
+
+        [SuppressUnmanagedCodeSecurity]
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int GetMaxKeySizeDelegate(IntPtr env);
+        private static GetMaxKeySizeDelegate _getMaxKeySizeDelegate = null;
+
+        public static int GetMaxKeySize(IntPtr env)
+        {
+            return _getMaxKeySizeDelegate(env);
+        }
+
+
         internal static void Bind()
         {
             _createDelegate = Library.GetProcAddress<CreateDelegate>("mdbx_env_create") as CreateDelegate;
@@ -193,6 +274,12 @@ namespace MDBX.Interop
             _infoDelegate = Library.GetProcAddress<InfoDelegate>("mdbx_env_info") as InfoDelegate;
             _syncDelegate = Library.GetProcAddress<SyncDelegate>("mdbx_env_sync") as SyncDelegate;
             _setMaxDbsDelegate = Library.GetProcAddress<SetMaxDbsDelegate>("mdbx_env_set_maxdbs") as SetMaxDbsDelegate;
+            _setFlagsDelegate = Library.GetProcAddress<SetFlagsDelegate>("mdbx_env_set_flags") as SetFlagsDelegate;
+            _getFlagsDelegate = Library.GetProcAddress<GetFlagsDelegate>("mdbx_env_get_flags") as GetFlagsDelegate;
+            _setMapSizeDelegate = Library.GetProcAddress<SetMapSizeDelegate>("mdbx_env_set_mapsize") as SetMapSizeDelegate;
+            _setMaxReadersDelegate = Library.GetProcAddress<SetMaxReadersDelegate>("mdbx_env_set_maxreaders") as SetMaxReadersDelegate;
+            _getMaxReadersDelegate = Library.GetProcAddress<GetMaxReadersDelegate>("mdbx_env_get_maxreaders") as GetMaxReadersDelegate;
+            _getMaxKeySizeDelegate = Library.GetProcAddress<GetMaxKeySizeDelegate>("mdbx_env_get_maxkeysize") as GetMaxKeySizeDelegate;
         }
 
     }

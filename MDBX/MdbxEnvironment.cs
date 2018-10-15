@@ -207,5 +207,129 @@ namespace MDBX
             }
             return this;
         }
+
+        /// <summary>
+        /// Set the maximum number of threads/reader slots for the environment.
+        /// 
+        /// This defines the number of slots in the lock table that is used to track
+        /// readers in the the environment. The default is 61.
+        /// Starting a read-only transaction normally ties a lock table slot to the
+        /// current thread until the environment closes or the thread exits. If
+        /// MDBX_NOTLS is in use, mdbx_txn_begin() instead ties the slot to the
+        /// MDBX_txn object until it or the MDBX_env object is destroyed.
+        /// This function may only be called after mdbx_env_create() and before Open()
+        /// </summary>
+        /// <param name="num"></param>
+        /// <returns></returns>
+        public MdbxEnvironment SetMaxReaders(uint num)
+        {
+            if (!closed && _envPtr != IntPtr.Zero)
+            {
+                Env.SetMaxReaders(_envPtr, num);
+            }
+            else
+            {
+                throw new InvalidOperationException("MDBX environment is not open.");
+            }
+            return this;
+        }
+
+        /// <summary>
+        /// et the size of the memory map to use for this environment.
+        /// 
+        /// The size should be a multiple of the OS page size. The default is
+        /// 10485760 bytes. The size of the memory map is also the maximum size
+        /// of the database. The value should be chosen as large as possible,
+        /// to accommodate future growth of the database.
+        /// 
+        /// This function should be called before Open()
+        /// It may be called at later times if no transactions
+        /// are active in this process. Note that the library does not check for
+        /// this condition, the caller must ensure it explicitly.
+        /// 
+        /// The new size takes effect immediately for the current process but
+        /// will not be persisted to any others until a write transaction has been
+        /// committed by the current process. Also, only mapsize increases are
+        /// persisted into the environment.
+        /// 
+        /// If the mapsize is increased by another process, and data has grown
+        /// beyond the range of the current mapsize, mdbx_txn_begin() will
+        /// return MDBX_MAP_RESIZED. This function may be called with a size
+        /// of zero to adopt the new size.
+        /// 
+        /// Any attempt to set a size smaller than the space already consumed by the
+        /// environment will be silently changed to the current size of the used space.
+        /// </summary>
+        /// <param name="num"></param>
+        /// <returns></returns>
+        public MdbxEnvironment SetMapSize(uint num)
+        {
+            if (!closed && _envPtr != IntPtr.Zero)
+            {
+                Env.SetMapSize(_envPtr, num);
+            }
+            else
+            {
+                throw new InvalidOperationException("MDBX environment is not open.");
+            }
+            return this;
+        }
+
+
+        public void SetFlags(EnvironmentFlag flags, SetOption option = SetOption.Add)
+        {
+            if (!closed && _envPtr != IntPtr.Zero)
+            {
+                Env.SetFlags(_envPtr, flags, option == SetOption.Add);
+            }
+            else
+            {
+                throw new InvalidOperationException("MDBX environment is not open.");
+            }
+        }
+
+        public EnvironmentFlag GetFlags()
+        {
+            if (!closed && _envPtr != IntPtr.Zero)
+            {
+                return Env.GetFlags(_envPtr);
+            }
+            else
+            {
+                throw new InvalidOperationException("MDBX environment is not open.");
+            }
+        }
+
+        /// <summary>
+        /// Get the maximum number of threads/reader slots for the environment.
+        /// </summary>
+        /// <returns></returns>
+        public int GetMaxReaders()
+        {
+            if (!closed && _envPtr != IntPtr.Zero)
+            {
+                return Env.GetMaxReaders(_envPtr);
+            }
+            else
+            {
+                throw new InvalidOperationException("MDBX environment is not open.");
+            }
+        }
+
+        /// <summary>
+        /// Get the maximum size of keys and MDBX_DUPSORT data we can write.
+        /// </summary>
+        /// <returns></returns>
+        public int GetMaxKeySize()
+        {
+            if (!closed && _envPtr != IntPtr.Zero)
+            {
+                return Env.GetMaxKeySize(_envPtr);
+            }
+            else
+            {
+                throw new InvalidOperationException("MDBX environment is not open.");
+            }
+        }
     }
 }
