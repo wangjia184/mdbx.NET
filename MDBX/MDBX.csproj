@@ -2,7 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>MDBX.Interop</AssemblyName>
+    <AssemblyName>mdbx.NET</AssemblyName>
+    <Authors>Jerry.Wang</Authors>
+    <PackageProjectUrl>https://github.com/wangjia184/mdbx.NET</PackageProjectUrl>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
