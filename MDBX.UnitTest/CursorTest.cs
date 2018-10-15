@@ -96,25 +96,34 @@ namespace MDBX.UnitTest
                     tran.Commit();
                 }
 
-                using (MdbxTransaction tran = env.BeginTransaction(TransactionOption.ReadOnly))
+                using (MdbxTransaction tran = env.BeginTransaction())
                 {
                     MdbxDatabase db = tran.OpenDatabase("cursor_test2");
                     using (MdbxCursor cursor = db.OpenCursor())
                     {
-                        string key = null, value = null;
-                        cursor.Get(ref key, ref value, CursorOp.First);
+                        cursor.Put(2, "2a"); // update by key
 
-                        char c = 'A';
-                        Assert.Equal(c.ToString(), key);
-                        Assert.Equal(c.ToString(), value);
+                        int key = 0;
+                        string value = null;
+                        cursor.Get(ref key, ref value, CursorOp.Next); // move to next
 
-                        while (cursor.Get(ref key, ref value, CursorOp.Next))
-                        {
-                            c = (char)((int)c + 1);
-                            Assert.Equal(c.ToString(), key);
-                            Assert.Equal(c.ToString(), value);
-                        }
+                        Assert.Equal(3, key);
+
+                        cursor.Del();  // delete current one
+
+                        key = 0;
+                        value = null;
+                        cursor.Get(ref key, ref value, CursorOp.GetCurrent);
+                        Assert.Equal(4, key);
+
+                        key = 0;
+                        value = null;
+                        cursor.Get(ref key, ref value, CursorOp.Prev);
+                        Assert.Equal(2, key);
+                        Assert.Equal("2a", value);
                     }
+
+                    tran.Commit();
                 }
 
                 env.Close();
