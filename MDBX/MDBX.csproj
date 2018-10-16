@@ -6,8 +6,9 @@
     <Authors>Jerry.Wang</Authors>
     <PackageProjectUrl>https://github.com/wangjia184/mdbx.NET</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageId>mdbx</PackageId>
+    <PackageId>mdbx.NET</PackageId>
     <Description>.NET wrapper of libmdbx, succeeder of LMDB(Lightning Memory-Mapped Database)</Description>
+    <PackageTags>lmdb mdbx libmdbx key-value performance storage-engine no-sql</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
