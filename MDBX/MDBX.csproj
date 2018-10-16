@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -9,6 +9,7 @@
     <PackageId>mdbx.NET</PackageId>
     <Description>.NET wrapper of libmdbx, succeeder of LMDB(Lightning Memory-Mapped Database)</Description>
     <PackageTags>lmdb mdbx libmdbx key-value performance storage-engine no-sql</PackageTags>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
