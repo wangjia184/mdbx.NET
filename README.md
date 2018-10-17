@@ -1,4 +1,4 @@
-# mdbx.NET (still in development)
+# mdbx.NET
 
 .NET wrapper of [libmdbx](https://github.com/leo-yuriev/libmdbx), succeeder of LMDB(Lightning Memory-Mapped Database).
 
@@ -6,7 +6,7 @@
 
 ## Installation
 
-NuGet package is available.
+NuGet package [![NuGet version](https://img.shields.io/nuget/v/mdbx.NET.svg)](https://www.nuget.org/packages/mdbx.NET/) is available. 
 ```
 Install-Package mdbx.NET
 ```
