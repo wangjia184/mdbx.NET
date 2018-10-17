@@ -9,16 +9,18 @@
     <PackageId>mdbx.NET</PackageId>
     <Description>.NET wrapper of libmdbx, succeeder of LMDB(Lightning Memory-Mapped Database)</Description>
     <PackageTags>lmdb mdbx libmdbx key-value performance storage-engine no-sql</PackageTags>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="x64\mdbx.dll">
+    <None Include="x86\*.dll" Pack="true" PackagePath="lib\netstandard2.0\x86" >
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="x86\mdbx.dll">
+    <None Include="x64\*.dll" Pack="true" PackagePath="lib\netstandard2.0\x64" >
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+
+
 
 </Project>
