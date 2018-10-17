@@ -61,7 +61,7 @@ namespace MDBX.Interop
         {
             int err = _closeExDelegate(env, dontSync ? 1 : 0);
             if (err != 0)
-                throw new MdbxException("mdbx_env_open_ex", err);
+                throw new MdbxException("mdbx_env_close_ex", err);
         }
 
 
@@ -96,34 +96,6 @@ namespace MDBX.Interop
             int err = _setMaxDbsDelegate(env, dbs);
             if (err != 0)
                 throw new MdbxException("mdbx_env_set_maxdbs", err);
-        }
-
-
-
-        /// <summary>
-        /// int mdbx_env_open_ex(MDBX_env *env, const char *path, unsigned flags, mode_t mode, int* exclusive);
-        /// </summary>
-        /// <param name="env"></param>
-        /// <param name="path"></param>
-        /// <param name="flags"></param>
-        /// <param name="mode"></param>
-        /// <param name="exclusive"></param>
-        /// <returns></returns>
-        [SuppressUnmanagedCodeSecurity]
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int OpenExDelegate(IntPtr env
-            , [MarshalAs(UnmanagedType.LPStr)] string path
-            , [MarshalAs(UnmanagedType.U4)] int flags
-            , [MarshalAs(UnmanagedType.I4)] int mode
-            , ref int exclusive
-            );
-        private static OpenExDelegate _openExDelegate = null;
-
-        public static void OpenEx(IntPtr env, string path, EnvironmentFlag flags, int mode, ref int exclusive)
-        {
-            int err = _openExDelegate(env, path, (int)flags, mode, ref exclusive);
-            if (err != 0)
-                throw new MdbxException("mdbx_env_close_ex", err);
         }
 
 
@@ -268,7 +240,6 @@ namespace MDBX.Interop
             _createDelegate = Library.GetProcAddress<CreateDelegate>("mdbx_env_create") as CreateDelegate;
             _closeDelegate = Library.GetProcAddress<CloseDelegate>("mdbx_env_close") as CloseDelegate;
             _closeExDelegate = Library.GetProcAddress<CloseExDelegate>("mdbx_env_close_ex") as CloseExDelegate;
-            _openExDelegate = Library.GetProcAddress<OpenExDelegate>("mdbx_env_open_ex") as OpenExDelegate;
             _openDelegate = Library.GetProcAddress<OpenDelegate>("mdbx_env_open") as OpenDelegate;
             _statDelegate = Library.GetProcAddress<StatDelegate>("mdbx_env_stat") as StatDelegate;
             _infoDelegate = Library.GetProcAddress<InfoDelegate>("mdbx_env_info") as InfoDelegate;

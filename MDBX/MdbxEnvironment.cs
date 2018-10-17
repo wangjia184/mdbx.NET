@@ -87,29 +87,6 @@ namespace MDBX
             Env.Open(_envPtr, path, flags, mode);
         }
 
-        /// <summary>
-        /// Open an environment handle.
-        /// 
-        /// This function allocates memory for a MDBX_env structure. To release
-        /// the allocated memory and discard the handle, call mdbx_env_close().
-        /// possible exceptions are:
-        ///    - MDBX_VERSION_MISMATCH - the version of the MDBX library doesn't match the
-        ///                              version that created the database environment.
-        ///    - MDBX_INVALID  - the environment file headers are corrupted.
-        ///    - MDBX_ENOENT   - the directory specified by the path parameter
-        ///                      doesn't exist.
-        ///    - MDBX_EACCES   - the user didn't have permission to access
-        ///                      the environment files.
-        ///    - MDBX_EAGAIN   - the environment was locked by another process. 
-        /// </summary>
-        /// <param name="path"></param>
-        /// <param name="flags"></param>
-        /// <param name="mode"></param>
-        /// <param name="exclusive"></param>
-        public void Open(string path, EnvironmentFlag flags, int mode, ref int exclusive)
-        {
-            Env.OpenEx(_envPtr, path, flags, mode, ref exclusive);
-        }
 
         /// <summary>
         /// Create a transaction for use with the environment.
