@@ -4,6 +4,10 @@
 
 [![Build status](https://ci.appveyor.com/api/projects/status/7nyn3s6fspk8j6o2/branch/master?svg=true)](https://ci.appveyor.com/project/wangjia184/mdbx-net/branch/master) [![NuGet version](https://img.shields.io/nuget/v/mdbx.NET.svg)](https://www.nuget.org/packages/mdbx.NET/) 
 
+### License
+
+This project is licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html) but the binary jar it produces also includes the the `mdbx` library of the OpenLDAP project which is licensed under the [The OpenLDAP Public License](http://www.openldap.org/software/release/license.html).
+
 ## How to Use
 
 NuGet package  is available, first install.
