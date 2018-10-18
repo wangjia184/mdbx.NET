@@ -12,11 +12,12 @@
     <Version>1.0.3</Version>
   </PropertyGroup>
 
+
   <ItemGroup>
-    <None Include="x86\*.dll" Pack="true" PackagePath="lib\netstandard2.0\x86" >
+    <None Update="native\windows\x64\*.dll" Pack="true" PackagePath="lib\netstandard2.0\native\windows\x64">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="x64\*.dll" Pack="true" PackagePath="lib\netstandard2.0\x64" >
+    <None Update="native\windows\x86\*.dll" Pack="true" PackagePath="lib\netstandard2.0\native\windows\x86">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

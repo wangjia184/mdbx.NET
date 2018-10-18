@@ -29,35 +29,38 @@ namespace MDBX.Interop
 
         internal static void Load()
         {
-            string dir = null;
+            string platform = null;
             string filename = null;
-            if( RuntimeInformation.IsOSPlatform(OSPlatform.Windows) )
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                switch (RuntimeInformation.ProcessArchitecture)
-                {
-                    case Architecture.X64:
-                        dir = "x64";
-                        filename = "mdbx.dll";
-                        break;
-
-                    case Architecture.X86:
-                        dir = "x86";
-                        filename = "mdbx.dll";
-                        break;
-                }
+                platform = "windows";
+                filename = "mdbx.dll";
             }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                platform = "linux";
+                filename = "mdbx.so";
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                platform = "osx";
+                filename = "mdbx.so";
+            }
+            else
+                throw new PlatformNotSupportedException($"Unsupported OS platform : {RuntimeInformation.OSDescription}");
 
-            if (string.IsNullOrWhiteSpace(filename) || string.IsNullOrWhiteSpace(dir))
-                throw new PlatformNotSupportedException($"{RuntimeInformation.OSDescription} {RuntimeInformation.ProcessArchitecture.ToString()} is not supported");
+            string filepath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
+                , "native"
+                , platform.ToLowerInvariant()
+                , RuntimeInformation.ProcessArchitecture.ToString().ToLowerInvariant()
+                , filename
+                );
 
-            string folder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            filename = Path.Combine(folder, dir, filename);
-
-            if (!File.Exists(filename))
-                throw new FileNotFoundException("MDBX failed to load.", filename);
+            if (!File.Exists(filepath))
+                throw new FileNotFoundException($"MDBX cannot find the library at {filepath}", filepath);
 
 
-            _libPtr = LoadLibrary(filename);
+            _libPtr = LoadLibrary(filepath);
 
             Misc.Bind();
             Env.Bind();
