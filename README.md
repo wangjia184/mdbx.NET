@@ -13,7 +13,7 @@ The `libmdbx` library is shipped in the `native` directory along with the assemb
 /native
    ├──/windows
    │   ├──/x86/mdbx.dll
-   │   ├──/x64/mdbx.dl
+   │   ├──/x64/mdbx.dll
    │   ├──/arm/
    │   └──/arm64/
    ├──/linux
