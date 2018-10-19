@@ -52,12 +52,12 @@ namespace MDBX.Interop
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
                 platform = "linux";
-                filename = "mdbx.so";
+                filename = "libmdbx.so";
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
                 platform = "osx";
-                filename = "mdbx.so";
+                filename = "libmdbx.so";
             }
             else
                 throw new PlatformNotSupportedException($"Unsupported OS platform : {RuntimeInformation.OSDescription}");

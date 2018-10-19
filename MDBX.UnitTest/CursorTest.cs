@@ -21,7 +21,7 @@ namespace MDBX.UnitTest
             using (MdbxEnvironment env = new MdbxEnvironment())
             {
                 env.SetMaxDatabases(20)
-                    .Open(path, EnvironmentFlag.NoTLS, 0644);
+                    .Open(path, EnvironmentFlag.NoTLS, Convert.ToInt32("666", 8));
 
 
                 using (MdbxTransaction tran = env.BeginTransaction())
@@ -79,7 +79,7 @@ namespace MDBX.UnitTest
             using (MdbxEnvironment env = new MdbxEnvironment())
             {
                 env.SetMaxDatabases(20)
-                    .Open(path, EnvironmentFlag.NoTLS, 0644);
+                    .Open(path, EnvironmentFlag.NoTLS, Convert.ToInt32("666", 8));
 
 
                 using (MdbxTransaction tran = env.BeginTransaction())

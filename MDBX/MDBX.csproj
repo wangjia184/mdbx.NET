@@ -20,6 +20,9 @@
     <None Update="native\windows\x86\*.dll" Pack="true" PackagePath="lib\netstandard2.0\native\windows\x86">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="native\linux\x64\*.so" Pack="true" PackagePath="lib\netstandard2.0\native\linux\x64">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 
