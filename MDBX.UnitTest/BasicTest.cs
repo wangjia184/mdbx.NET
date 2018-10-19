@@ -22,7 +22,7 @@ namespace MDBX.UnitTest
             using (MdbxEnvironment env = new MdbxEnvironment())
             {
                 env.SetMaxDatabases(10) /* allow us to use a different db for testing */
-                   .Open(path, EnvironmentFlag.NoTLS, 0644);
+                   .Open(path, EnvironmentFlag.NoTLS, Convert.ToInt32("666", 8));
 
                 DatabaseOption option = DatabaseOption.Create /* needed to create a new db if not exists */
                     | DatabaseOption.IntegerKey/* opitimized for fixed key */;
@@ -85,7 +85,7 @@ namespace MDBX.UnitTest
 
             using (MdbxEnvironment env = new MdbxEnvironment())
             {
-                env.Open(path, EnvironmentFlag.NoTLS, 0644);
+                env.Open(path, EnvironmentFlag.NoTLS, Convert.ToInt32("666", 8));
 
                 var putBytes = Encoding.UTF8.GetBytes(Guid.NewGuid().ToString());
 
@@ -139,7 +139,7 @@ namespace MDBX.UnitTest
 
             using (MdbxEnvironment env = new MdbxEnvironment())
             {
-                env.Open(path, EnvironmentFlag.NoTLS, 0644);
+                env.Open(path, EnvironmentFlag.NoTLS, Convert.ToInt32("666", 8));
 
                 var putBytes = Encoding.UTF8.GetBytes(Guid.NewGuid().ToString());
 

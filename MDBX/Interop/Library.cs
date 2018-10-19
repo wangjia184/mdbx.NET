@@ -7,10 +7,19 @@ namespace MDBX.Interop
 {
     internal static class Library
     {
-        [DllImport("kernel32", SetLastError = true, CharSet = CharSet.Ansi)]
+        [DllImport("libdl.so")]
+        private static extern IntPtr dlopen(string filename, int flags);
+
+        [DllImport("libdl.so")]
+        private static extern IntPtr dlsym(IntPtr handle, string symbol);
+
+        const int RTLD_NOW = 2; // for dlopen's flags 
+
+
+        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Ansi)]
         private static extern IntPtr LoadLibrary([MarshalAs(UnmanagedType.LPStr)]string lpFileName);
 
-        [DllImport("kernel32", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
+        [DllImport("kernel32.dll", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
         private static extern IntPtr GetProcAddress(IntPtr hModule, string procName);
 
         private static IntPtr _libPtr = IntPtr.Zero;
@@ -18,7 +27,11 @@ namespace MDBX.Interop
 
         internal static Delegate GetProcAddress<T>(string procName)
         {
-            IntPtr ptr = GetProcAddress(_libPtr, procName);
+            IntPtr ptr = IntPtr.Zero;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                ptr = GetProcAddress(_libPtr, procName);
+            else
+                ptr = dlsym(_libPtr, procName);
             if (ptr != IntPtr.Zero)
             {
                 return Marshal.GetDelegateForFunctionPointer(ptr, typeof(T));
@@ -29,35 +42,43 @@ namespace MDBX.Interop
 
         internal static void Load()
         {
-            string dir = null;
+            string platform = null;
             string filename = null;
-            if( RuntimeInformation.IsOSPlatform(OSPlatform.Windows) )
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                switch (RuntimeInformation.ProcessArchitecture)
-                {
-                    case Architecture.X64:
-                        dir = "x64";
-                        filename = "mdbx.dll";
-                        break;
-
-                    case Architecture.X86:
-                        dir = "x86";
-                        filename = "mdbx.dll";
-                        break;
-                }
+                platform = "windows";
+                filename = "mdbx.dll";
             }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                platform = "linux";
+                filename = "libmdbx.so";
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                platform = "osx";
+                filename = "libmdbx.so";
+            }
+            else
+                throw new PlatformNotSupportedException($"Unsupported OS platform : {RuntimeInformation.OSDescription}");
 
-            if (string.IsNullOrWhiteSpace(filename) || string.IsNullOrWhiteSpace(dir))
-                throw new PlatformNotSupportedException($"{RuntimeInformation.OSDescription} {RuntimeInformation.ProcessArchitecture.ToString()} is not supported");
+            string filepath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
+                , "native"
+                , platform.ToLowerInvariant()
+                , RuntimeInformation.ProcessArchitecture.ToString().ToLowerInvariant()
+                , filename
+                );
 
-            string folder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            filename = Path.Combine(folder, dir, filename);
+            if (!File.Exists(filepath))
+                throw new FileNotFoundException($"MDBX cannot find the library at {filepath}", filepath);
 
-            if (!File.Exists(filename))
-                throw new FileNotFoundException("MDBX failed to load.", filename);
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                _libPtr = LoadLibrary(filepath);
+            else
+                _libPtr = dlopen(filepath, RTLD_NOW);
 
-
-            _libPtr = LoadLibrary(filename);
+            if(_libPtr == IntPtr.Zero )
+                throw new FileNotFoundException($"MDBX failed to load library at {filepath}", filepath);
 
             Misc.Bind();
             Env.Bind();

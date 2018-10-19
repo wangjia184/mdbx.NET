@@ -21,7 +21,7 @@ namespace MDBX.UnitTest
 
             using (MdbxEnvironment env = new MdbxEnvironment())
             {
-                env.Open(path, EnvironmentFlag.NoTLS, 0644);
+                env.Open(path, EnvironmentFlag.NoTLS, Convert.ToInt32("666", 8));
 
                 var stat = env.Stat();
 
@@ -39,7 +39,7 @@ namespace MDBX.UnitTest
 
             using (MdbxEnvironment env = new MdbxEnvironment())
             {
-                env.Open(path, EnvironmentFlag.NoTLS, 0644);
+                env.Open(path, EnvironmentFlag.NoTLS, Convert.ToInt32("666", 8));
 
                 var stat = env.Info();
 
@@ -59,7 +59,7 @@ namespace MDBX.UnitTest
 
             using (MdbxEnvironment env = new MdbxEnvironment())
             {
-                env.Open(path, EnvironmentFlag.NoTLS, 0644);
+                env.Open(path, EnvironmentFlag.NoTLS, Convert.ToInt32("666", 8));
 
                 EnvironmentFlag flags = env.GetFlags();
 
@@ -83,7 +83,7 @@ namespace MDBX.UnitTest
                 env.SetMapSize(1024*1024*10)
                     .SetMaxDatabases(2)
                     .SetMaxReaders(100)
-                    .Open(path, EnvironmentFlag.NoTLS, 0644);
+                    .Open(path, EnvironmentFlag.NoTLS, Convert.ToInt32("666", 8));
 
                 env.Close();
             }
@@ -99,7 +99,7 @@ namespace MDBX.UnitTest
 
             using (MdbxEnvironment env = new MdbxEnvironment())
             {
-                env.Open(path, EnvironmentFlag.NoTLS, 0644);
+                env.Open(path, EnvironmentFlag.NoTLS, Convert.ToInt32("666", 8));
 
                 int maxKeySize = env.GetMaxKeySize();
                 int maxReaders = env.GetMaxReaders();
@@ -118,7 +118,7 @@ namespace MDBX.UnitTest
 
             using (MdbxEnvironment env = new MdbxEnvironment())
             {
-                env.Open(path, EnvironmentFlag.NoTLS, 0644);
+                env.Open(path, EnvironmentFlag.NoTLS, Convert.ToInt32("666", 8));
 
                 using (MdbxTransaction tran = env.BeginTransaction(TransactionOption.ReadOnly))
                 {

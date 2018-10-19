@@ -1,12 +1,33 @@
 # mdbx.NET
 
-.NET wrapper of [libmdbx](https://github.com/leo-yuriev/libmdbx), succeeder of LMDB(Lightning Memory-Mapped Database).
+.NET binding(.NET Standard 2.0) of [libmdbx](https://github.com/leo-yuriev/libmdbx), succeeder of LMDB(Lightning Memory-Mapped Database).
 
 [![Build status](https://ci.appveyor.com/api/projects/status/7nyn3s6fspk8j6o2/branch/master?svg=true)](https://ci.appveyor.com/project/wangjia184/mdbx-net/branch/master) [![NuGet version](https://img.shields.io/nuget/v/mdbx.NET.svg)](https://www.nuget.org/packages/mdbx.NET/) 
 
 ### License
 
-This project is licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html) but it includes the the `mdbx` library of the OpenLDAP project which is licensed under the [The OpenLDAP Public License](http://www.openldap.org/software/release/license.html).
+This project is licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html) but it includes the the `libmdbx` library of the ReOpenLDAP project which is licensed under the [The OpenLDAP Public License](http://www.openldap.org/software/release/license.html).
+
+The `libmdbx` library is shipped in the `native` directory along with the assembly.
+```
+/native
+   ├──/windows
+   │   ├──/x86/mdbx.dll
+   │   ├──/x64/mdbx.dl
+   │   ├──/arm/
+   │   └──/arm64/
+   ├──/linux
+   │   ├──/x86/
+   │   ├──/x64/libmdbx.so
+   │   ├──/arm/
+   │   └──/arm64/
+   └──/osx
+       ├──/x86/
+       ├──/x64/
+       ├──/arm/
+       └──/arm64/
+```
+Note that not all platforms are shipped. and there are many different Linux distributions, you may need build your own `libmdbx.so` to replace the one from the package.
 
 ## How to Use
 
@@ -22,7 +43,7 @@ using MDBX;
 using (MdbxEnvironment env = new MdbxEnvironment())
 {
     env.SetMaxDatabases(10) /* allow us to use a different db for testing */
-        .Open(path, EnvironmentFlag.NoTLS, 0644);
+        .Open(path, EnvironmentFlag.NoTLS/* flags */, Convert.ToInt32("666", 8)/* permission */ );
 
     DatabaseOption option = DatabaseOption.Create /* needed to create a new db if not exists */
         | DatabaseOption.IntegerKey/* opitimized for fixed-size int/long key */;
