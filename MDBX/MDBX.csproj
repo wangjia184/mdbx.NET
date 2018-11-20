@@ -9,10 +9,22 @@
     <PackageId>mdbx.NET</PackageId>
     <Description>.NET bindings of libmdbx, succeeder of LMDB(Lightning Memory-Mapped Database)</Description>
     <PackageTags>lmdb mdbx libmdbx key-value performance storage-engine no-sql</PackageTags>
-    <Version>1.1.1</Version>
+    <Version>1.1.2</Version>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Update="native\linux\x64\libmdbx.so">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="native\windows\x64\mdbx.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="native\windows\x86\mdbx.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 
+<!--
   <ItemGroup>
     <None Update="native\windows\x64\*.dll" Pack="true" PackagePath="lib\netstandard2.0\native\windows\x64">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -24,7 +36,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
+-->
 
 
 </Project>
