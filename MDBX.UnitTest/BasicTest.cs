@@ -141,7 +141,6 @@ namespace MDBX.UnitTest
             {
                 env.Open(path, EnvironmentFlag.NoTLS, Convert.ToInt32("666", 8));
 
-                var putBytes = Encoding.UTF8.GetBytes(Guid.NewGuid().ToString());
 
                 // mdbx_put
                 using (MdbxTransaction tran = env.BeginTransaction())
@@ -169,6 +168,57 @@ namespace MDBX.UnitTest
             }
         }
 
+
+
+        [Fact(DisplayName = "put / set single key (raw value)")]
+        public void Test4()
+        {
+            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "mdbx");
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
+            using (MdbxEnvironment env = new MdbxEnvironment())
+            {
+                env.Open(path, EnvironmentFlag.NoTLS, Convert.ToInt32("666", 8));
+
+                string key = Guid.NewGuid().ToString("N"); // some key
+                byte[] value = Encoding.UTF8.GetBytes(Guid.NewGuid().ToString()); // some value in bytes
+
+
+                // mdbx_get
+                using (MdbxTransaction tran = env.BeginTransaction(TransactionOption.ReadOnly))
+                {
+                    MdbxDatabase db = tran.OpenDatabase();
+
+                    byte[] getBytes = db.Get(key);
+                    Assert.Null(getBytes);
+                }
+
+
+                // mdbx_put
+                using (MdbxTransaction tran = env.BeginTransaction())
+                {
+                    MdbxDatabase db = tran.OpenDatabase();
+                    db.Put(key, value);
+                    tran.Commit();
+                }
+
+
+                // mdbx_get
+                using (MdbxTransaction tran = env.BeginTransaction(TransactionOption.ReadOnly))
+                {
+                    MdbxDatabase db = tran.OpenDatabase();
+
+                    byte[] getBytes = db.Get(key);
+                    Assert.NotNull(getBytes);
+                    Assert.Equal(value.Length, getBytes.Length);
+                    Assert.Equal(value, getBytes);
+                }
+
+
+                env.Close();
+            }
+        }
 
     }
 }

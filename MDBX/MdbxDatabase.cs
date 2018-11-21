@@ -89,6 +89,7 @@ namespace MDBX
             Put(keySerializer.Serialize(key), valueSerializer.Serialize(value), option);
         }
 
+
         /// <summary>
         /// Get a single key
         /// </summary>
@@ -143,6 +144,17 @@ namespace MDBX
             if (buffer == null)
                 return default(V);
             return valueSerializer.Deserialize(buffer);
+        }
+
+        /// <summary>
+        /// Get a single key
+        /// </summary>
+        /// <typeparam name="K"></typeparam>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public byte[] Get<K>(K key)
+        {
+            return Get<K, byte[]>(key);
         }
 
         /// <summary>

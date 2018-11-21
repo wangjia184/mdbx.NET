@@ -11,6 +11,7 @@ namespace MDBX
             {  typeof(string), new StringSerializer() },
             {  typeof(int), new IntSerializer() },
             {  typeof(long), new LongSerializer() },
+            { typeof(byte[]), new ByteArraySerializer() },
         };
 
         /// <summary>
