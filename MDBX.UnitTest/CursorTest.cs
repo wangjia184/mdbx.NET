@@ -158,7 +158,7 @@ namespace MDBX.UnitTest
                 {
                     MdbxDatabase db = tran.OpenDatabase("cursor_test3", option);
 
-                    for ( long i = 0; i < 10000; i++)
+                    for ( long i = 0; i < 10; i++)
                     {
                         db.Put(i, Guid.NewGuid().ToByteArray());
                     }
@@ -171,13 +171,15 @@ namespace MDBX.UnitTest
                     MdbxDatabase db = tran.OpenDatabase("cursor_test3", option);
                     using (MdbxCursor cursor = db.OpenCursor())
                     {
-                        int key = 0;
+                        long key = 0;
                         byte[] value = null;
                         cursor.Get(ref key, ref value, CursorOp.First);
 
-                        int index = 0;
+                        long index = 0;
                         Assert.Equal(index, key);
 
+                        key = 0;
+                        value = null;
                         while (cursor.Get(ref key, ref value, CursorOp.Next))
                         {
                             index++;
