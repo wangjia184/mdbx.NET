@@ -212,7 +212,7 @@ namespace MDBX
         }
 
         /// <summary>
-        /// et the size of the memory map to use for this environment.
+        /// Set the size of the memory map to use for this environment.
         /// 
         /// The size should be a multiple of the OS page size. The default is
         /// 10485760 bytes. The size of the memory map is also the maximum size

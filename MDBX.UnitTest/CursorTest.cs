@@ -21,6 +21,7 @@ namespace MDBX.UnitTest
             using (MdbxEnvironment env = new MdbxEnvironment())
             {
                 env.SetMaxDatabases(20)
+                    .SetMaxReaders(128)
                     .Open(path, EnvironmentFlag.NoTLS, Convert.ToInt32("666", 8));
 
 
@@ -79,6 +80,7 @@ namespace MDBX.UnitTest
             using (MdbxEnvironment env = new MdbxEnvironment())
             {
                 env.SetMaxDatabases(20)
+                    .SetMaxReaders(128)
                     .Open(path, EnvironmentFlag.NoTLS, Convert.ToInt32("666", 8));
 
 
@@ -129,6 +131,67 @@ namespace MDBX.UnitTest
                 env.Close();
             }
         }
+
+
+        [Fact(DisplayName = "enumerate all (raw value)")]
+        public void Test3()
+        {
+            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "mdbx2");
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
+            using (MdbxEnvironment env = new MdbxEnvironment())
+            {
+                EnvironmentFlag flags = EnvironmentFlag.NoTLS |
+                    EnvironmentFlag.NoMetaSync |
+                    EnvironmentFlag.Coalesce |
+                    EnvironmentFlag.LifoReclaim;
+                env.SetMaxDatabases(20)
+                    .SetMaxReaders(128)
+                    .SetMapSize(10485760*10)
+                    .Open(path, flags, Convert.ToInt32("666", 8));
+
+
+                DatabaseOption option = DatabaseOption.Create | DatabaseOption.IntegerKey;
+                // add some values
+                using (MdbxTransaction tran = env.BeginTransaction())
+                {
+                    MdbxDatabase db = tran.OpenDatabase("cursor_test3", option);
+
+                    for ( long i = 0; i < 1000000; i++)
+                    {
+                        db.Put(i, Guid.NewGuid().ToByteArray());
+                    }
+
+                    tran.Commit();
+                }
+
+                using (MdbxTransaction tran = env.BeginTransaction(TransactionOption.ReadOnly))
+                {
+                    MdbxDatabase db = tran.OpenDatabase("cursor_test3", option);
+                    using (MdbxCursor cursor = db.OpenCursor())
+                    {
+                        long key = 0;
+                        byte[] value = null;
+                        cursor.Get(ref key, ref value, CursorOp.First);
+
+                        long index = 0;
+                        Assert.Equal(index, key);
+
+                        key = 0;
+                        value = null;
+                        while (cursor.Get(ref key, ref value, CursorOp.Next))
+                        {
+                            index++;
+                            Assert.Equal(index, key);
+                        }
+                    }
+                }
+
+                env.Close();
+            }
+        }
+
 
     }
 }
