@@ -10,23 +10,23 @@ This project is licensed under the [Apache License, Version 2.0](http://www.apac
 
 The `libmdbx` library is not shipped with this assembly. And the assembly will load `libmdbx` from the location below according to your platform and OS.
 ```
-MDBX.dll
-  └──/native
-      ├──/windows
-      │   ├──/x86/mdbx.dll
-      │   ├──/x64/mdbx.dll
-      │   ├──/arm/mdbx.dll
-      │   └──/arm64/mdbx.dll
-      ├──/linux
-      │   ├──/x86/libmdbx.so
-      │   ├──/x64/libmdbx.so
-      │   ├──/arm/libmdbx.so
-      │   └──/arm64/libmdbx.so
-      └──/osx
-          ├──/x86/libmdbx.so
-          ├──/x64/libmdbx.so
-          ├──/arm/libmdbx.so
-          └──/arm64/libmdbx.so
+/mdbx.NET.dll
+/native
+  ├──/windows
+  │   ├──/x86/mdbx.dll
+  │   ├──/x64/mdbx.dll
+  │   ├──/arm/mdbx.dll
+  │   └──/arm64/mdbx.dll
+  ├──/linux
+  │   ├──/x86/libmdbx.so
+  │   ├──/x64/libmdbx.so
+  │   ├──/arm/libmdbx.so
+  │   └──/arm64/libmdbx.so
+  └──/osx
+      ├──/x86/libmdbx.so
+      ├──/x64/libmdbx.so
+      ├──/arm/libmdbx.so
+      └──/arm64/libmdbx.so
 ```
 
 

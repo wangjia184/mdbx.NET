@@ -158,7 +158,7 @@ namespace MDBX.UnitTest
                 {
                     MdbxDatabase db = tran.OpenDatabase("cursor_test3", option);
 
-                    for ( long i = 0; i < 10; i++)
+                    for ( long i = 0; i < 1000000; i++)
                     {
                         db.Put(i, Guid.NewGuid().ToByteArray());
                     }
